@@ -20,7 +20,7 @@ def inx(a, le):
 def is_poset(extensions, n):
     for a in range(1 << n):
         for b in range(1 << n):
-            if a >= b:
+            if a == b:
                 continue
             find_lower = False
             find_higher = False
@@ -36,13 +36,18 @@ def is_poset(extensions, n):
                     raise Exception(f"Not found lower in {bin(a)} {bin(b)}")
                 if find_higher:
                     raise Exception(f"Found higher in {bin(a)} {bin(b)}")
+            elif is_subset(b, a):
+                if not find_higher:
+                    raise Exception(f"Not found higher in {bin(a)} {bin(b)}")
+                if find_lower:
+                    raise Exception(f"Found lower in {bin(a)} {bin(b)}")
             else:
                 if not find_higher:
                     raise Exception(f"Not found higher in {bin(a)} {bin(b)}")
                 if not find_lower:
                     raise Exception(f"Not found lower in {bin(a)} {bin(b)}")
 
-    print(f"It is a proper partial realizer of B_{n}")
+    print(f"It is a correct partial realizer of B_{n}")
 
 def check_local_dim(extensions, n):
     max_count = -1
