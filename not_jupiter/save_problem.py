@@ -8,61 +8,7 @@ sage.libs.ecl.ecl_eval("(ext:set-limit 'ext:heap-size 0)")
 
 from enum import Enum
 
-class VarType(Enum): 
-    IsLess = 1
-    IsMore = 2
-    IsUsed = 3
-
-def construct_variable_map(poset, linear_extensions_count):
-    '''
-    is_lower[a, b, i]  > 0 means that a < b in the i-th linear extension
-    is_higher[a, b, i] > 0 means that a > b in the i-th linear extension
-    Is_used[a, i]      > 0 means that a is in the i-th linear extension
-    '''
-    variable_idx = 1
-
-    is_lower = {}    
-    for a,b in itertools.combinations(poset, int(2)):
-        for i in range(linear_extensions_count):
-            is_lower[a,b,i] = variable_idx
-            variable_idx += 1
-
-    is_higher = {}    
-    for a,b in itertools.combinations(poset, int(2)):
-        for i in range(linear_extensions_count):
-            is_higher[a,b,i] = variable_idx
-            variable_idx += 1
-
-    is_used = {}    
-    for a in poset:
-        for i in range(linear_extensions_count):
-            is_used[a, i] = variable_idx
-            variable_idx += 1
-
-    def is_less_variable_getter(*args):
-        a, b, i = args
-        if b < a:
-            raise Exception("b < a")
-        return is_lower[a,b,i]
-
-    def is_more_variable_getter(*args):
-        a, b, i = args
-        if b < a:
-            raise Exception("b < a")
-        return is_higher[a,b,i]
-
-    def is_used_variable_getter(*args):
-        a, i = args
-        return is_used[a, i]
-
-    def variable_getter(VarType, *args):
-        match VarType:
-            case VarType.IsLess: return is_less_variable_getter(*args)
-            case VarType.IsMore: return is_more_variable_getter(*args)
-            case VarType.IsUsed: return is_used_variable_getter(*args)
-            case _: raise Exception("Unknown variable type")
-        
-    return variable_getter
+from common_vars import construct_variable_map, VarType, get_boolean_graph
 
 def get_transitivity_clauses(poset, linear_extensions_count, var_getter):
     '''
@@ -178,20 +124,42 @@ def generate_less_more_clauses(poset, linear_extensions_count, var_getter):
             
     return clauses
 
-def get_boolean_graph(dim):
-    B = Posets.BooleanLattice(dim)
-    return DiGraph([x for x in B.relations() if x[0] != x[1]])
+def get_even_in_ple_clauses(poset, linear_extensions_count, expected_ldim, var_getter):
+    '''
+    Ensures that exactly `in_each_ple` elements are used in each linear extension `i`.
+    '''
+    
+    clauses = []
+
+    elements = len(poset)
+    all_elements = elements * expected_ldim
+    in_each_ple = all_elements // linear_extensions_count  # Exact count we need per ple
+
+    for i in range(linear_extensions_count):
+        # Collect the `is_used[a, i]` variables for each element a
+        used_vars = [var_getter(VarType.IsUsed, a, i) for a in poset]
+
+        # Enforce at least `in_each_ple` true values in `used_vars` for linear extension `i`
+        for combination in itertools.combinations(range(len(used_vars)), in_each_ple):
+            clauses.append([used_vars[a] for a in combination])  # At least `in_each_ple` True
+
+        # Enforce at most `in_each_ple` true values in `used_vars` for linear extension `i`
+        for combination in itertools.combinations(range(len(used_vars)), len(used_vars) - in_each_ple + 1):
+            clauses.append([-used_vars[a] for a in combination])  # At most `in_each_ple` True
+
+    return clauses
 
 def generate_clauses(dim, linear_extensions_count, local_dim):
     boolean_graph = get_boolean_graph(dim)
 
     vertices = sorted(boolean_graph.vertices())
-    var_getter = construct_variable_map(vertices, linear_extensions_count)
+    var_getter = construct_variable_map(vertices, linear_extensions_count, local_dim)
 
     clauses  = generate_poset_clauses(boolean_graph, linear_extensions_count, var_getter)
     clauses += generate_use_clauses(vertices, linear_extensions_count, local_dim, var_getter)
     clauses += generate_less_more_clauses(vertices, linear_extensions_count, var_getter)
     clauses += get_transitivity_clauses(vertices, linear_extensions_count, var_getter)
+    #clauses += get_even_in_ple_clauses(vertices, linear_extensions_count, local_dim, var_getter)
 
     return clauses
 
@@ -207,5 +175,5 @@ save_problem(
     dim = 4,
     local_dim = 3,
     linear_extensions_count = 4,
-    file_name = "dim43.dimacs"
+    file_name = "dim74_16.dimacs"
 )

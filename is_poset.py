@@ -1,8 +1,15 @@
+# extensions = [
+#     [0, 8, 1, 9, 2, 3, 11, 4, 6, 7, 12, 14, 13, 15],
+#     [0, 8, 5, 12, 13, 2, 10, 6, 14, 3, 7, 11, 15],
+#     [0, 10, 4, 12, 14, 1, 9, 11, 5, 13, 15],
+#     [4, 2, 6, 1, 3, 5, 7, 8, 9, 10]
+# ]
+
 extensions = [
-    [0, 8, 1, 9, 2, 3, 11, 4, 6, 7, 12, 14, 13, 15],
-    [0, 8, 5, 12, 13, 2, 10, 6, 14, 3, 7, 11, 15],
-    [0, 10, 4, 12, 14, 1, 9, 11, 5, 13, 15],
-    [4, 2, 6, 1, 3, 5, 7, 8, 9, 10]
+    [2, 8, 1, 9, 3, 11, 4, 5, 7, 12, 13], 
+    [0, 3, 6, 7, 8, 10, 14, 9, 11, 15], 
+    [0, 10, 4, 6, 12, 14, 1, 5, 13, 3, 15], 
+    [0, 4, 1, 5, 8, 12, 9, 13, 2, 10, 11, 6, 14, 7, 15]
 ]
 
 # extensions = [[6, 8, 14, 5, 7, 13, 15, 16, 18, 20, 22, 23], 
@@ -166,8 +173,8 @@ def check_local_dim(extensions, n):
             idx += 1
         if count > max_count:
             max_count = count
-        if count != 5:
-            print("OJ")
+        # if count != 5:
+        #     print("OJ")
         print(to_list(a), in_ple)
     print(f"Local dimension is {max_count}")
 
@@ -207,8 +214,8 @@ def check_without(le_idx, elem_idx):
 # for n in range(2,11):
 #     print((n, int(ceil(n/log2(n))))) 
 
-#is_poset(extensions, N)
-#check_local_dim(extensions, N)
+is_poset(extensions, N)
+check_local_dim(extensions, N)
 
 #print(to_latex(extensions, N))
 
