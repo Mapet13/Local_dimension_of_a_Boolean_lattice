@@ -1,5 +1,5 @@
-# Local Dimension of Boolean Lattice
-The repository contains tools, that were used to find local realizers of the Boolean lattice. 
+# Local dimension of a Boolean lattice
+The repository contains tools, that were used to find local realizers of a Boolean lattice. 
 
 More details will be provided in the upcoming paper of the same tile. 
 
