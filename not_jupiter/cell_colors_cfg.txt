@@ -1,0 +1,7 @@
+red!25
+blue!25
+yellow!25
+green!25
+pink!35
+brown!25
+cyan!25

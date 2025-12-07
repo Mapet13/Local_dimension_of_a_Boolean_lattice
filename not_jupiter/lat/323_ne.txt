@@ -1,0 +1,13 @@
+\begin{table}[]
+    \scriptsize
+    \sffamily
+    \centering
+    \begin{tabular}{|c|c|c|}\hline\rule[-1.5ex]{0pt}{2pt} $L_1$ \rule{0pt}{3ex}& $L_2$& $L_3$ \\{[}\s\1\s\s\s\3{]} & {[}\s\1\s\2\s\s{]} & {[}\s\s\s\2\s\3{]}\\
+{[}\s\s\s\s\s\3{]} & {[}\s\1\s\s\s\s{]} & {[}\s\1\s\2\s\3{]}\\
+{[}\s\1\s\2\s\s{]} & {[}\s\s\s\2\s\3{]} & {[}\s\s\s\2\s\s{]}\\
+{[}\s\s\s\2\s\s{]} & {[}\s\s\s\s\s\3{]} & {[}\s\1\s\s\s\3{]}\\
+{[}\s\s\s\s\s\s{]} & \s\s\s\s\s & {[}\s\1\s\s\s\s{]}\\
+\s\s\s\s\s & \s\s\s\s\s & {[}\s\s\s\s\s\s{]}\\
+\hline
+    \end{tabular}
+    \end{table}
